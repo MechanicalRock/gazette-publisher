@@ -5,6 +5,8 @@
 
 A serverless application for publishing CloudFormation templates to service catalog.
 
+![Gazette System](https://github.com/MechanicalRock/gazette-publisher/tree/master/docs/images/gazette-publisher.png)
+
 ## Requirements
 
 - Templates must be published to a bucket in the following format <product-name>/<product-version.(yml|yaml|json)>.
