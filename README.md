@@ -5,7 +5,9 @@
 
 A serverless application for publishing CloudFormation templates to service catalog.
 
-![Gazette System](https://github.com/MechanicalRock/gazette-publisher/tree/master/docs/images/gazette-publisher.png)
+<p align="center">
+  <img src="https://github.com/MechanicalRock/gazette-publisher/blob/master/docs/images/gazette-publisher.png">
+</p>
 
 ## Requirements
 
