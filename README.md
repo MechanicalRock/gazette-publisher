@@ -70,3 +70,7 @@ sam deploy --template-file packaged.yaml --stack-name $STACK_NAME \
 - No E2E tests
 - CI/CD and publishing to SAR needs setting up
 - Product/Versions are not removed when deleted from bucket
+- Errors/Retries need 
+    - CreateProduct should retry on LimitExceededException
+    - CreateVersion should retry on LimitExceededException
+    - 500 errors should be retried

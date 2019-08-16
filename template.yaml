@@ -94,7 +94,10 @@ Resources:
             "FindProduct": {
               "Type": "Task",
               "Resource": "${FindProduct.Arn}",
-              "Next": "Fork"
+              "Next": "Fork",
+              "Retry": [{
+                "ErrorEquals": [ "States.ALL"]
+              }]
             },
             "Fork": {
               "Type": "Choice",
