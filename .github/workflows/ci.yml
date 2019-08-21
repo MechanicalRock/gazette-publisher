@@ -15,30 +15,23 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: '10.x'
-    - name: Install Dependencies
+    - name: Install
       run: npm ci
-  test:
-    name: Test
-    needs: checkout
-    runs-on: ubuntu-latest
-    steps:
-    - name: Prepare Environment
-      uses: actions/setup-node@v1
-      with:
-        node-version: '10.x'
-    - name: Run Tests
+    - name: Test
       run: npm run test -- --coverage
-  package:
-    name: Package
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-    - name: Prepare Environment
-      uses: actions/setup-node@v1
-      with:
-        node-version: '10.x'
-    - name: Run Build
+    - name: Build
       run: npm run build
+  # package:
+  #   name: Package
+  #   needs: test
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Prepare Environment
+  #     uses: actions/setup-node@v1
+  #     with:
+  #       node-version: '10.x'
+  #   - name: Run Build
+  #     run: npm run build
     # - name: SAM Package
     #   working-directory: ./.aws-sam/build
     #   uses: actions/aws-sam
