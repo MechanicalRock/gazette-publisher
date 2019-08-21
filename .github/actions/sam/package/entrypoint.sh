@@ -20,7 +20,7 @@ ARGS+=( "--output-template-file $INPUT_OUTPUT_TEMPLATE_FILE" )
 
 CMD="sam package ${ARGS[@]}"
 
-output=$( sh -c $CMD )
+output=$( sh -c "$CMD" )
 
 # Preserve output for consumption by downstream actions
 echo "$output" > "${HOME}/${GITHUB_ACTION}.${AWS_DEFAULT_OUTPUT}"
