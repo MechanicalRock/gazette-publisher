@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -ex
 
 cd $INPUT_WORKING_DIR
 
@@ -20,18 +20,12 @@ ARGS+=( "--s3-bucket $INPUT_BUCKET" )
 ARGS+=( "--template-file $INPUT_TEMPLATE_FILE" )
 ARGS+=( "--output-template-file $INPUT_OUTPUT_TEMPLATE_FILE" )
 
-# ARGS=--s3-bucket $INPUT_BUCKET --template-file $INPUT_TEMPLATE_FILE \
-#     --output-template-file $INPUT_OUTPUT_TEMPLATE_FILE
-
-# ARGS+= --s3-prefix $INPUT_PREFIX
-
-# CMD=sam package --s3-bucket $INPUT_BUCKET --template-file $INPUT_TEMPLATE_FILE \
-#     --output-template-file $INPUT_OUTPUT_TEMPLATE_FILE
+echo "{$ARGS[@]}"
 
 output=$( sh -c "$CMD ${ARGS[@]}" )
 
 # Preserve output for consumption by downstream actions
-#echo "$output" > "${HOME}/${GITHUB_ACTION}.${AWS_DEFAULT_OUTPUT}"
+echo "$output" > "${HOME}/${GITHUB_ACTION}.${AWS_DEFAULT_OUTPUT}"
 
 # Write output to STDOUT
 echo "$output"
