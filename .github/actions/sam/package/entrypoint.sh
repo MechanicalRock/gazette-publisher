@@ -10,8 +10,6 @@ cd $INPUT_WORKING_DIR
 # Respect AWS_DEFAULT_OUTPUT if specified
 [ -n "$AWS_DEFAULT_OUTPUT" ] || export AWS_DEFAULT_OUTPUT=json
 
-CMD='sam package'
-
 ARGS=()
 
 (( -z "$PREFIX" )) && args+=( "--prefix $PREFIX")
@@ -20,9 +18,9 @@ ARGS+=( "--s3-bucket $INPUT_BUCKET" )
 ARGS+=( "--template-file $INPUT_TEMPLATE_FILE" )
 ARGS+=( "--output-template-file $INPUT_OUTPUT_TEMPLATE_FILE" )
 
-echo "{$ARGS[@]}"
+CMD="sam package ${ARGS[@]}"
 
-output=$( sh -c "$CMD ${ARGS[@]}" )
+output=$( sh -c $CMD )
 
 # Preserve output for consumption by downstream actions
 echo "$output" > "${HOME}/${GITHUB_ACTION}.${AWS_DEFAULT_OUTPUT}"
