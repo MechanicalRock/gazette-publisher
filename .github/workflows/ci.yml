@@ -14,8 +14,8 @@ jobs:
     - name: Publish
       #if: startsWith(github.ref, 'refs/tags')
       env:
-        TAG: 
-      run: echo ${{ toJson(github) }}
+        TAG:  ${{ toJson(github) }}
+      run: echo "$TAG"
     - name: Checkout
       uses: actions/checkout@v1
     - name: Prepare Environment
