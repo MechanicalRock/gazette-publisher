@@ -34,7 +34,7 @@ jobs:
           --s3-bucket ${{ secrets.BUCKET }} 
           --s3-prefix ${{ github.repository }}/${{ github.sha }}
     - name: Push Template to S3
-      uses: actions/aws@master
+      uses: actions/aws/cli@master
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
