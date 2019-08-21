@@ -1,4 +1,4 @@
-name: AWS SAM
+name: AWS SAM Package
 description: Package a SAM application
 author: matt.tyler@mechanicalrock.io
 runs:

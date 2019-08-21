@@ -11,6 +11,11 @@ jobs:
     name: Checkout
     runs-on: ubuntu-latest
     steps:
+    - name: Publish
+      #if: startsWith(github.ref, 'refs/tags')
+      env:
+        TAG: 
+      run: echo ${{ toJson(github) }}
     - name: Checkout
       uses: actions/checkout@v1
     - name: Prepare Environment
@@ -45,10 +50,10 @@ jobs:
           s3 cp ./.aws-sam/build/${{ github.sha }}.yaml
           s3://${{ secrets.BUCKET }}/${{ github.repository }}/${{ github.sha }}/template.yaml
     - name: Publish
-      if: startsWith(github.ref, 'refs/tags')
+      #if: startsWith(github.ref, 'refs/tags')
       env:
         TAG: 
-      run: echo ${{ format(github.ref, 'refs/tags/') }}
+      run: echo ${{ toJson(github) }}
       # uses: ./.github/actions/sam
       # env:
       #   SAM_CLI_TELEMETRY: 0

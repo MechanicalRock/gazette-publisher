@@ -2,8 +2,6 @@
 
 set -e
 
-cd $INPUT_WORKING_DIRECTORY
-
 # Respect AWS_DEFAULT_REGION if specified
 [ -n "$AWS_DEFAULT_REGION" ] || export AWS_DEFAULT_REGION=us-east-1
 
@@ -12,13 +10,10 @@ cd $INPUT_WORKING_DIRECTORY
 
 ARGS=()
 
-(( -z "$PREFIX" )) && args+=( "--prefix $PREFIX")
+ARGS+=( "--template $INPUT_TEMPLATE" )
+ARGS+=( "--semantic-version $INPUT_SEMANTIC_VERSION" )
 
-ARGS+=( "--s3-bucket $INPUT_BUCKET" )
-ARGS+=( "--template-file $INPUT_TEMPLATE_FILE" )
-ARGS+=( "--output-template-file $INPUT_OUTPUT_TEMPLATE_FILE" )
-
-CMD="sam package ${ARGS[@]}"
+CMD="sam publish ${ARGS[@]}"
 
 output=$( sh -c "$CMD" )
 
