@@ -8,6 +8,8 @@ set -e
 # Respect AWS_DEFAULT_OUTPUT if specified
 [ -n "$AWS_DEFAULT_OUTPUT" ] || export AWS_DEFAULT_OUTPUT=json
 
+VERSION=$(git name-rev --tags --name-only $(git rev-parse HEAD))
+
 ARGS=()
 
 ARGS+=( "--template $INPUT_TEMPLATE" )
