@@ -26,12 +26,12 @@ jobs:
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      args:
-        - package 
-        - --template-file template.yaml
-        - --output-template-file ${{ github.sha }}.yaml
-        - --s3-bucket ${{ secrets.BUCKET }}
-        - --s3-prefix ${{ github.repository }}/${{ github.sha }}
+      with: 
+        args: >-
+          package --template-file template.yaml 
+          --output-template-file ${{ github.sha }}.yaml 
+          --s3-bucket ${{ secrets.BUCKET }} 
+          --s3-prefix ${{ github.repository }}/${{ github.sha }}
   # package:
   #   name: Package
   #   needs: test
