@@ -1,6 +1,0 @@
-name: AWS SAM
-description: Package and Publish with SAM/SAR
-author: matt.tyler@mechanicalrock.io
-runs:
-  using: docker
-  image: Dockerfile
