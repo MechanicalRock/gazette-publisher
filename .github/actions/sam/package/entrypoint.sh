@@ -2,7 +2,7 @@
 
 set -ex
 
-cd $INPUT_WORKING_DIR
+cd $INPUT_WORKING_DIRECTORY
 
 # Respect AWS_DEFAULT_REGION if specified
 [ -n "$AWS_DEFAULT_REGION" ] || export AWS_DEFAULT_REGION=us-east-1
