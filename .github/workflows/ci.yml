@@ -47,8 +47,8 @@ jobs:
     - name: Publish
       if: startsWith(github.ref, 'refs/tags')
       env:
-        TAG: ${{ format(github.ref, 'ref/tags/') }}
-      run: echo "$TAG"
+        TAG: 
+      run: echo ${{ format(github.ref, 'refs/tags/') }}
       # uses: ./.github/actions/sam
       # env:
       #   SAM_CLI_TELEMETRY: 0
