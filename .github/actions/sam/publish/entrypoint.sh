@@ -10,7 +10,7 @@ set -e
 
 VERSION=$(git describe --exact-match --tags)
 
-if ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\/[0-9]+$ ]]; then
+if ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\./[0-9]+$ ]]; then
     echo "Tag is not a semantic version: $VERSION"
     exit 1
 fi
