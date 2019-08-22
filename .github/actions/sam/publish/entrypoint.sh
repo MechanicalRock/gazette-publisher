@@ -8,12 +8,19 @@ set -e
 # Respect AWS_DEFAULT_OUTPUT if specified
 [ -n "$AWS_DEFAULT_OUTPUT" ] || export AWS_DEFAULT_OUTPUT=json
 
-VERSION=$(git name-rev --tags --name-only $(git rev-parse HEAD))
+VERSION=$(git describe --exact-match --tags)
+
+if [[ $versionNumber =~ ^[0-9]+\.[0-9]+\/[0-9]+$ ]]; then
+    versionShort=${BASH_REMATCH[0]}
+else
+    echo "Tag is not a semantic version: $VERSION"
+    exit 1
+fi
 
 ARGS=()
 
 ARGS+=( "--template $INPUT_TEMPLATE" )
-ARGS+=( "--semantic-version $INPUT_SEMANTIC_VERSION" )
+ARGS+=( "--semantic-version $VERSION" )
 
 CMD="sam publish ${ARGS[@]}"
 
