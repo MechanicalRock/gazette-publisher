@@ -46,7 +46,7 @@ jobs:
           s3://${{ secrets.BUCKET }}/${{ github.repository }}/${{ github.sha }}/template.yaml
     - name: Publish
       if: startsWith(github.ref, 'refs/tags')
-      uses: ./.github/actions/sam
+      uses: ./.github/actions/sam/publish
       env:
         SAM_CLI_TELEMETRY: 0
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

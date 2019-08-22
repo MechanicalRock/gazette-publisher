@@ -9,4 +9,3 @@ inputs:
       description: template
       required: false
       default: packaged.yaml
-
