@@ -11,13 +11,6 @@ jobs:
     name: Checkout
     runs-on: ubuntu-latest
     steps:
-    - name: Check
-      env:
-        STEP_CONTEXT: ${{ toJson(steps) }}
-        JOB_CONTEXT: ${{ toJson(job) }}
-      run: |
-          echo "$JOB_CONTEXT"
-          echo "$STEP_CONTEXT"
     - name: Checkout
       uses: actions/checkout@v1
     - name: Prepare Environment
@@ -51,6 +44,13 @@ jobs:
         args: >-
           s3 cp ./.aws-sam/build/${{ github.sha }}.yaml
           s3://${{ secrets.BUCKET }}/${{ github.repository }}/${{ github.sha }}/template.yaml
+    - name: Check
+      env:
+        STEPS_CONTEXT: ${{ toJson(steps) }}
+        JOB_CONTEXT: ${{ toJson(job) }}
+      run: |
+          echo "$JOB_CONTEXT"
+          echo "$STEPS_CONTEXT"
     - name: Publish
       if: startsWith(github.ref, 'refs/tags')
       uses: ./.github/actions/sam
