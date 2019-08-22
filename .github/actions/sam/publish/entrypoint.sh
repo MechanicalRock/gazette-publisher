@@ -18,7 +18,7 @@ fi
 ARGS=()
 
 ARGS+=( "--template $INPUT_TEMPLATE" )
-ARGS+=( "--semantic-version $VERSION" )
+ARGS+=( "--semantic-version \"$VERSION\"" )
 
 CMD="sam publish ${ARGS[@]}"
 
