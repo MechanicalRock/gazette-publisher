@@ -9,6 +9,4 @@ inputs:
       description: template
       required: false
       default: packaged.yaml
-    semantic_version:
-      description: semantic version
-      required: true
+
