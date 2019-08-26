@@ -20,7 +20,10 @@ jobs:
     - name: Install
       run: npm ci
     - name: Test
-      run: npm run test -- --coverage schema
+      run: npm run test -- --coverage
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_INT_TEST }}
+        AWS_SECRET_ACCESS_KEY: ${{ secret.AWS_SECRET_ACCESS_KEY_INT_TEST }}
     - name: Build
       run: npm run build
     - name: SAM Package

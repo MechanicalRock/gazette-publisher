@@ -2,20 +2,38 @@ import { S3, ServiceCatalog, ResourceGroups, config } from "aws-sdk";
 import { FindProducts, ParseFromKey } from "../../src/FindProduct/lib";
 import { CreateProduct } from "../../src/CreateProduct/lib";
 import { CreateVersion } from "../../src/CreateVersion/lib";
+import { TagSet } from "aws-sdk/clients/s3";
+
+type TagFilters = { Key: string, Values: string[]}[]
+
+function ToTagFilters (tagSet: TagSet): TagFilters {
+    return tagSet.map( ( { Key, Value } ) => ({ Key, Values: [ Value ] }))
+}
+
+const prefix = id => `gazette-test-${id}`;
 
 export async function GivenAnExistingProduct(
     catalog: ServiceCatalog,
     s3: S3,
     rg: ResourceGroups,
-    id: string
+    guid: string
 ) {
     const { region } = config;
 
-    await CreateTagResourceGroup(rg, id);
+    const id = prefix(guid);
 
-    await CreateTaggedBucket(s3, id);
+    const tags: TagSet = [
+        {
+            Key: "ExecutionId",
+            Value: guid
+        }
+    ];
 
-    const key = `${id}/v1.json`;
+    await CreateTagResourceGroup(rg, id, ...ToTagFilters(tags));
+
+    await CreateTaggedBucket(s3, id, ...tags);
+
+    const key = `${guid}/v1.json`;
 
     await UploadTaggedTemplate(s3, id, key, DUMMY);
 
@@ -26,23 +44,25 @@ export async function GivenAnExistingProduct(
         owner: "",
         templateUrl: `https://${id}.s3-${region}.amazonaws.com/${key}`,
         token: `${name}`,
-        tags: [{ Key: "ExecutionId", Value: id }]
+        tags
     });
 }
 
 export async function WhenICreateANewVersionOfTheProduct(
     catalog: ServiceCatalog,
     s3: S3,
-    id: string
+    guid: string
 ) {
     const { region } = config;
 
-    const { products, count } = await FindProducts(catalog, id);
+    const id = prefix(guid);
+
+    const { products, count } = await FindProducts(catalog, guid);
     if (count === 0) {
         throw new Error("Product does not exist");
     }
 
-    const key = `${id}/v2.json`;
+    const key = `${guid}/v2.json`;
     await UploadTaggedTemplate(s3, id, key, DUMMY);
 
     const { name, version } = ParseFromKey(key);
@@ -84,32 +104,32 @@ async function UploadTaggedTemplate(
         .promise();
 }
 
-async function CreateTaggedBucket(s3: S3, id: string) {
-    await s3.createBucket({ Bucket: id }).promise();
+async function CreateTaggedBucket(s3: S3, Bucket: string, ...TagSet: TagSet) {
+    await s3.createBucket({ Bucket }).promise();
     await s3
         .putBucketTagging({
-            Bucket: id,
+            Bucket,
             Tagging: {
-                TagSet: [{ Key: "ExecutionId", Value: id }]
+                TagSet
             }
         })
         .promise();
+    return Bucket;
 }
 
-async function CreateTagResourceGroup(rg: ResourceGroups, executionId: string) {
+async function CreateTagResourceGroup(
+    rg: ResourceGroups,
+    Name: string,
+    ...TagFilters: TagFilters
+) {
     await rg
         .createGroup({
-            Name: executionId,
+            Name,
             ResourceQuery: {
                 Type: "TAG_FILTERS_1_0",
                 Query: JSON.stringify({
                     ResourceTypeFilters: ["AWS::AllSupported"],
-                    TagFilters: [
-                        {
-                            Key: "ExecutionId",
-                            Values: [executionId]
-                        }
-                    ]
+                    TagFilters
                 })
             }
         })

@@ -1,25 +1,38 @@
 import { S3, ServiceCatalog, ResourceGroups, config } from "aws-sdk";
 import { ParseFromKey, FindProducts } from "../../src/FindProduct/lib";
+import { TagSet } from "aws-sdk/clients/s3"
 import { CreateProduct } from "../../src/CreateProduct/lib";
 
-// add tags to create product
-// list out resource groups
-// delete the bucket and all objects
-// delete the products
+type TagFilters = { Key: string, Values: string[]}[]
+
+function ToTagFilters (tagSet: TagSet): TagFilters {
+    return tagSet.map( ( { Key, Value } ) => ({ Key, Values: [ Value ] }))
+}
+
+const prefix = id => `gazette-test-${id}`;
 
 export async function GivenACatalogOfProducts(
     catalog: ServiceCatalog,
     s3: S3,
     rg: ResourceGroups,
-    id: string
+    guid: string
 ) {
     const { region } = config;
 
-    await CreateTagResourceGroup(rg, id);
+    const id = prefix(guid)
 
-    await CreateTaggedBucket(s3, id);
+    const tags: TagSet = [
+        {
+            Key: "ExecutionId",
+            Value: guid,
+        }
+    ]
 
-    const keys = new Array(2).fill(0).map((_, idx) => `${id}_${idx}/v1.json`);
+    await CreateTagResourceGroup(rg, id, ...ToTagFilters(tags));
+
+    await CreateTaggedBucket(s3, id, ...tags);
+
+    const keys = new Array(2).fill(0).map((_, idx) => `${guid}_${idx}/v1.json`);
     await Promise.all(
         keys.map(key => UploadTaggedTemplate(s3, id, key, DUMMY))
     );
@@ -33,7 +46,7 @@ export async function GivenACatalogOfProducts(
                 owner: "",
                 templateUrl: `https://${id}.s3-${region}.amazonaws.com/${key}`,
                 token: `${name}`,
-                tags: [{ Key: "ExecutionId", Value: id }]
+                tags
             });
         })
     );
@@ -83,32 +96,28 @@ async function UploadTaggedTemplate(
         .promise();
 }
 
-async function CreateTaggedBucket(s3: S3, id: string) {
-    await s3.createBucket({ Bucket: id }).promise();
+async function CreateTaggedBucket(s3: S3, Bucket: string, ...TagSet: TagSet) {
+    await s3.createBucket({ Bucket }).promise();
     await s3
         .putBucketTagging({
-            Bucket: id,
+            Bucket,
             Tagging: {
-                TagSet: [{ Key: "ExecutionId", Value: id }]
+                TagSet,
             }
         })
         .promise();
+    return Bucket;
 }
 
-async function CreateTagResourceGroup(rg: ResourceGroups, executionId: string) {
+async function CreateTagResourceGroup(rg: ResourceGroups, Name: string, ...TagFilters: TagFilters) {
     await rg
         .createGroup({
-            Name: executionId,
+            Name,
             ResourceQuery: {
                 Type: "TAG_FILTERS_1_0",
                 Query: JSON.stringify({
                     ResourceTypeFilters: ["AWS::AllSupported"],
-                    TagFilters: [
-                        {
-                            Key: "ExecutionId",
-                            Values: [executionId]
-                        }
-                    ]
+                    TagFilters,
                 })
             }
         })
