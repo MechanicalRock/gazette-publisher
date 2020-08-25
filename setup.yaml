@@ -1,6 +1,9 @@
 AWSTemplateFormatVersion: 2010-09-09
 Transform: AWS::Serverless-2016-10-31
 Resources:
+  ArtifactBucket:
+    Type: AWS::S3::Bucket
+
   StableBucket:
     Type: AWS::S3::Bucket
 
@@ -50,6 +53,8 @@ Resources:
       S3BucketName: !Ref TrailBucket
 
 Outputs:
+  ArtifactBucket:
+    Value: !Ref ArtifactBucket
   StableBucket:
     Value: !Ref StableBucket
   UnstableBucket:
