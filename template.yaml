@@ -13,6 +13,7 @@ Metadata:
 Parameters:
   EventBus:
     Type: String
+    Default: "default"
   Bucket:
     Type: String
     Description: The name of the bucket that will contain the templates
