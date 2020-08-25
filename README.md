@@ -15,7 +15,7 @@ A serverless application for publishing CloudFormation templates to service cata
 - Any source code required by templates (e.g. lambda function source) must be stored in a separate bucket.
 - A CloudTrail must be configured to record write events that are made to the template bucket.
 
-`setup.yaml` is provided at the project root to set up a trail and two associated buckets.
+`setup.yaml` is provided at the project root to set up a trail and three associated buckets.
 
 ## Optional
 
