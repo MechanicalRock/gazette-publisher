@@ -11,7 +11,8 @@ A serverless application for publishing CloudFormation templates to service cata
 
 ## Requirements
 
-- Templates must be published to a bucket in the following format <product-name>/<product-version.(yml|yaml|json)>.
+- Templates must be published to a bucket in the following format `<product-name>`/`<product-version`.(yml|yaml|json)>.
+  - `<product-version>` should be in the form `vmajor_minor_patch` e.g. `v_1_0_0`.  Periods (`.`) are not currently supported
 - Any source code required by templates (e.g. lambda function source) must be stored in a separate bucket.
 - A CloudTrail must be configured to record write events that are made to the template bucket.
 
